@@ -3,6 +3,8 @@ import axios from "axios";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { PlaceholderPage } from "./PlaceholderPage";
+import { LoginPage } from "./LoginPage";
+import { SignupPage } from "./SignupPage";
 
 
 const router = createBrowserRouter([
@@ -20,14 +22,14 @@ const router = createBrowserRouter([
         element: <PlaceholderPage />,
         loader: () => axios.get("http://localhost:3000/exercises.json").then((response) => response.data),
       },
-      // {
-      //   path: "/signup",
-      //   element: <SignupPage />,
-      // },
-      // {
-      //   path: "/login",
-      //   element: <LoginPage />,
-      // },
+      {
+        path: "/signup",
+        element: <SignupPage />,
+      },
+      {
+        path: "/login",
+        element: <LoginPage />,
+      },
     ],
   },
 ]);
