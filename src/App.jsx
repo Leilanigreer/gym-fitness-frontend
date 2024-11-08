@@ -41,7 +41,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return <div className="container-fluid"><RouterProvider router={router} /></div>;
 }
 
 export default App;

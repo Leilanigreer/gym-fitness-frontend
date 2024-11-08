@@ -1,5 +1,10 @@
 @import "bootstrap/scss/bootstrap";
 
+:root {
+  // --bs-body-bg: #ebe3db
+  --bs-body-bg: #F1EDE6
+}
+
 html {
   scroll-behavior: smooth;
 }
