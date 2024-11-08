@@ -5,6 +5,7 @@ import { Footer } from "./Footer";
 import { PlaceholderPage } from "./PlaceholderPage";
 import { LoginPage } from "./LoginPage";
 import { SignupPage } from "./SignupPage";
+import { RoutinesIndex } from "./RoutinesIndex";
 
 
 const router = createBrowserRouter([
@@ -29,6 +30,11 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <LoginPage />,
+      },
+      {
+        path: "/routines",
+        element: <RoutinesIndex />,
+        loader: () => axios.get("http://localhost:3000/routines.json").then((response) => response.data),
       },
     ],
   },
