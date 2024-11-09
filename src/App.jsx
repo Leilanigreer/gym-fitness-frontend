@@ -6,20 +6,30 @@ import { PlaceholderPage } from "./PlaceholderPage";
 import { LoginPage } from "./LoginPage";
 import { SignupPage } from "./SignupPage";
 import { RoutinesIndex } from "./RoutinesIndex";
-
+import { HomePage } from "./HomePage";
 
 const router = createBrowserRouter([
   {
     element: (
-      <div>
+      <div className="d-flex flex-column min-vh-100" style={{ backgroundColor: '#F1EDE6' }}>
         <Header />
-        <Outlet />
+        <main className="flex-grow-1">
+          <div className="container py-4">
+            <div className="bg-white p-4 rounded shadow-sm">
+              <Outlet />
+            </div>
+          </div>
+        </main>
         <Footer />
       </div>
     ),
     children: [
       {
         path: "/",
+        element: <HomePage />,
+      },
+      {
+        path: "/placeholder",
         element: <PlaceholderPage />,
         loader: () => axios.get("http://localhost:3000/exercises.json").then((response) => response.data),
       },
@@ -41,7 +51,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <div className="container-fluid"><RouterProvider router={router} /></div>;
+  return <RouterProvider router={router} />;
 }
 
 export default App;

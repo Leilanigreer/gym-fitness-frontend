@@ -1,7 +1,28 @@
+import React from 'react';
+
 export function Footer() {
   return (
-    <footer>
-      <p>Copyright Leilani's imagination 2024</p>
+    <footer className="navbar fixed-bottom" style={{ backgroundColor: '#2D0A31' }}>
+      <div className="container-fluid">
+        <div className="row w-100 align-items-center justify-content-between">
+          <div className="col-auto">
+            <p className="mb-0 text-white">
+              <small>Copyright © {new Date().getFullYear()} Leilani's imagination</small>
+            </p>
+          </div>
+          <div className="col-auto">
+            <div className="d-flex align-items-center gap-2">
+              <img 
+                src="src/assets/Bigger_Get_in_Shape.png" 
+                alt="GIS Logo" 
+                className="rounded"
+                style={{ width: '20px', height: '20px' }} 
+              />
+              <small className="text-white">Get In Shape</small>
+            </div>
+          </div>
+        </div>
+      </div>
     </footer>
-  )
+  );
 }
