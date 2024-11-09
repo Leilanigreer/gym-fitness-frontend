@@ -19,14 +19,16 @@ export function Header() {
 
   if (localStorage.jwt === undefined) {
     authenticationLinks = (
-      <>
-      <Link to="/Signup">Signup</Link> | 
-      <Link to="/Login">Login</Link>
-      </>
+      <li className="nav-item d-flex">
+        <Link className="nav-link" to="/Signup">Signup</Link>
+        <Link className="nav-link" to="/Login">Login</Link>
+      </li>
     )
   } else {
     authenticationLinks = (
-      <LogoutLink />
+      <li className="nav-item">
+        <LogoutLink />
+      </li>
     )
   };
 
@@ -34,35 +36,27 @@ export function Header() {
     <header>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
-          {/* <img src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top"> */}
-            G.I.S
-          </a>
+          <Link className="navbar-brand d-flex align-items-center" to="/">
+          <img src="src/assets/Bigger_Get_in_Shape.png" alt="Logo" width="50" height="50" className="d-inline-block"/>
+            <span className="fs-4 fw-bold ms-2"> G.I.S</span>
+          </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/">Home</a>
+                <Link className="nav-link active" aria-current="page" to="/">Home</Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="/routines">My Routines</a>
+                <Link className="nav-link active" aria-current="page" to="/routines">My Routines</Link>
               </li>
-              <li className="nav-item">
-                <a className="nav-link active"> {authenticationLinks}</a>
-              </li>
-              {/* <li className="nav-item">
-                <a className="nav-link disabled" aria-disabled="true">Disabled</a>
-              </li> */}
+              {authenticationLinks}
             </ul>
           </div>
         </div>
       </nav>
-      {/* <nav>
-        <a href="/">Home</a> | {authenticationLinks}
-      </nav> */}
-        <h2>Hi {currentUser.name}!</h2>
+      <h2>Hi {currentUser.name}!</h2>
     </header>
   )
 }
