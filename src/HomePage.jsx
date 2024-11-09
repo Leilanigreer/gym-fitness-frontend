@@ -1,3 +1,4 @@
+// src/HomePage.jsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -56,7 +57,7 @@ const HomePage = () => {
                 {isAuthenticated() ? (
                   <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center">
                     <Link 
-                      to="/placeholder"
+                      to="/Exercises"
                       className={primaryButtonClass}
                     >
                       Browse Exercises
@@ -77,7 +78,7 @@ const HomePage = () => {
                 ) : (
                   <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center align-items-center">
                     <Link 
-                      to="/placeholder"
+                      to="/Exercises"
                       className={primaryButtonClass}
                     >
                       Browse Exercises

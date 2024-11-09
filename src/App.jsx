@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import axios from "axios";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { PlaceholderPage } from "./PlaceholderPage";
+import { ExercisesIndex } from "./ExercisesIndex";
 import { LoginPage } from "./LoginPage";
 import { SignupPage } from "./SignupPage";
 import  RoutinesIndex  from "./RoutinesIndex";
@@ -29,8 +29,8 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/placeholder",
-        element: <PlaceholderPage />,
+        path: "/Exercises",
+        element: <ExercisesIndex />,
         loader: () => axios.get("http://localhost:3000/exercises.json").then((response) => response.data),
       },
       {
