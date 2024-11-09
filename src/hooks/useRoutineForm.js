@@ -34,7 +34,7 @@ export function useRoutineForm() {
   };
 
   const handleFieldChange = (field, exerciseId, value) => {
-    console.log(`Updating ${field} for exercise ${exerciseId} to ${value}`)
+    // console.log(`Updating ${field} for exercise ${exerciseId} to ${value}`)
     setFormData(prev => ({
       ...prev,
       [field]: { ...prev[field], [exerciseId]: value },

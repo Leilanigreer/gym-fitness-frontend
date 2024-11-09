@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export function RoutinesIndex () {
   const routines = useLoaderData ();
+  console.log(routines);
   const [selectedDay, setSelectedDay] = useState("All Routines");
 
 
@@ -51,6 +52,7 @@ export function RoutinesIndex () {
       <h4>Your Current routines for {selectedDay}</h4>
     {filteredRoutines.map ((routine) => 
     <div key={routine.id}>
+      <p>Exercise: {routine.exercise.name}</p>
       <p>Sets: {routine.sets}</p>
       <p>Reps: {routine.reps}</p>
     </div>

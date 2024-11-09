@@ -5,9 +5,10 @@ import { useRoutineForm } from "./hooks/useRoutineForm";
 
 export function ExercisesIndex () {
   const exercises = useLoaderData ();
+  // console.log(exercises);
   const {formData, handleAddExercise, handleFieldChange} = useRoutineForm();
 
-  console.log(`Current Form Data:`, formData);
+  // console.log(`Current Form Data:`, formData);
 
   const now = new Date();
   // console.log(now);

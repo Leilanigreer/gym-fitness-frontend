@@ -2,8 +2,8 @@
 import { DAYS_ARRAY } from "../constants/days";
 
 export function RoutineForm({ onSubmit, exerciseId, formData = {}, onFieldChange }) {
-  console.log('Form Data:', formData);
-  console.log('Exercise ID', exerciseId);
+  // console.log('Form Data:', formData);
+  // console.log('Exercise ID', exerciseId);
 
   const { day = {}, reps = {}, sets = {} } = formData;
 
