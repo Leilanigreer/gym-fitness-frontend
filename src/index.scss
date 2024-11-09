@@ -1,12 +1,29 @@
+// Custom Bootstrap variables
+$primary: #5D3E8D; // A nice purple for your primary actions
+$success: #7E5BB7; // A lighter purple for secondary actions
+
+// Custom color map
+$custom-colors: (
+  "purple": #5D3E8D,
+  "purple-light": #7E5BB7
+);
+
+// Font imports
 @import "@fontsource/poppins/400.css"; // Regular
 @import "@fontsource/poppins/600.css"; // Semi-bold
+
+// Bootstrap import
 @import "bootstrap/scss/bootstrap";
 
-// :root {
-//   // --bs-body-bg: #ebe3db
-//   --bs-body-bg: #F1EDE6
-// }
+// Additional custom styles can go here
+.btn-primary {
+  &:hover {
+    background-color: darken($primary, 10%);
+  }
+}
 
-html {
-  scroll-behavior: smooth;
+.btn-success {
+  &:hover {
+    background-color: darken($success, 10%);
+  }
 }

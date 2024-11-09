@@ -6,7 +6,7 @@ import { PlaceholderPage } from "./PlaceholderPage";
 import { LoginPage } from "./LoginPage";
 import { SignupPage } from "./SignupPage";
 import { RoutinesIndex } from "./RoutinesIndex";
-import { HomePage } from "./HomePage";
+import  HomePage from "./HomePage";
 
 const router = createBrowserRouter([
   {

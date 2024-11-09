@@ -5,6 +5,7 @@ import { isAuthenticated } from "./utils/auth";
 
 export function Header() {
   let authenticationLinks;
+  let routineLinks;
 
   if (!isAuthenticated()) {
     authenticationLinks = (
@@ -19,6 +20,26 @@ export function Header() {
         <LogoutLink className="nav-link btn btn-outline-light px-3" />
       </li>
     );
+    routineLinks = (
+      <>
+        <li className="nav-item">
+        <Link 
+          className="nav-link text-white hover:text-opacity-75 px-3 mx-1" 
+          to="/routines"
+        >
+          My Routines
+        </Link>
+        </li>
+        <li className="nav-item">
+        <Link 
+          className="nav-link text-white hover:text-opacity-75 px-3 mx-1" 
+          to="/routines"
+        >
+          Todays Routines
+        </Link>
+      </li>
+    </>
+    )
   }
 
   return (
@@ -70,14 +91,7 @@ export function Header() {
                   Exercises
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link 
-                  className="nav-link text-white hover:text-opacity-75 px-3 mx-1" 
-                  to="/routines"
-                >
-                  My Routines
-                </Link>
-              </li>
+              {routineLinks}
             </ul>
             <ul className="navbar-nav">
               {authenticationLinks}
