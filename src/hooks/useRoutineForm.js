@@ -41,9 +41,45 @@ export function useRoutineForm() {
     }));
   };
 
+  const handleUpdateRoutine = async (event, routineId, onSuccess) => {
+    event.preventDefault();
+
+    const params = {
+      reps: formData.reps[routineId],
+      sets: formData.sets[routineId],
+      day: formData.day[routineId],
+    };
+    try {
+      await axios.patch(`http://localhost:3000/routines/${routineId}.json`, params);
+      
+      setFormData(prev => ({
+        reps: { ...prev.reps, [routineId]: "" },
+        day: { ...prev.day, [routineId]: "" },
+        sets: { ...prev.sets, [routineId]: "" },
+      }));
+
+      // Call success callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      console.error("Error updating routine:", error);
+    }
+  }; 
+
+  const initializeFormData = (routine) => {
+    setFormData({
+      reps: { [routine.id]: routine.reps },
+      day: { [routine.id]: routine.day },
+      sets: { [routine.id]: routine.sets },
+    });
+  };
+
   return {
     formData,
     handleAddExercise,
     handleFieldChange,
+    handleUpdateRoutine,
+    initializeFormData,
   };
 }
