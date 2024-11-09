@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { LogoutLink } from "./LogoutLink";
+import { isAuthenticated } from "./utils/auth";
+
 
 export function Header() {
   let authenticationLinks;
 
-  if (localStorage.jwt === undefined) {
+  if (!isAuthenticated()) {
     authenticationLinks = (
       <li className="nav-item d-flex">
         <Link className="nav-link btn btn-outline-light mx-1 px-3" to="/Signup">Signup</Link>
