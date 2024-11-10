@@ -31,5 +31,28 @@ export const SHORT_DAYS = {
   SATURDAY: 'Sat'
 };
 
-// Example usage in other files:
-// import { DAYS_OF_WEEK, DAYS_ARRAY, SHORT_DAYS } from '../constants/days';
+export const getCurrentDay = () => {
+  return DAYS_ARRAY[new Date().getDay()];
+};
+
+export const isValidDay = (day) => {
+  return DAYS_ARRAY.includes(day);
+};
+
+export const getShortDay = (day) => {
+  return SHORT_DAYS[
+    Object.keys(DAYS_OF_WEEK).find(key => 
+      DAYS_OF_WEEK[key] === day
+    )
+  ];
+};
+
+export const getNextDay = (currentDay) => {
+  const currentIndex = DAYS_ARRAY.indexOf(currentDay);
+  return DAYS_ARRAY[(currentIndex + 1) % 7];
+};
+
+export const getTodaysWorkouts = (routines) => {
+  const today = getCurrentDay();
+  return routines.filter(routine => routine.day === today);
+};

@@ -33,7 +33,7 @@ export function Header() {
         <li className="nav-item">
         <Link 
           className="nav-link text-white hover:text-opacity-75 px-3 mx-1" 
-          to="/routines"
+          to="/workout_log"
         >
           Todays Routines
         </Link>

@@ -7,6 +7,7 @@ import { LoginPage } from "./LoginPage";
 import { SignupPage } from "./SignupPage";
 import  RoutinesIndex  from "./RoutinesIndex";
 import  HomePage from "./HomePage";
+import { WorkoutLogNew } from "./WorkoutLogNew";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,22 @@ const router = createBrowserRouter([
         path: "/routines",
         element: <RoutinesIndex />,
         loader: () => axios.get("http://localhost:3000/routines.json").then((response) => response.data),
+      },
+      {
+        path: "/workout_log",
+        element: <WorkoutLogNew />,
+        loader: async () => {
+          // Load both routines and workout logs
+          const [routinesResponse, logsResponse] = await Promise.all([
+            axios.get("http://localhost:3000/routines.json"),
+            axios.get("http://localhost:3000/workout_logs.json")
+          ]);
+          
+          return {
+            routines: routinesResponse.data,
+            logs: logsResponse.data
+          };
+        }
       },
     ],
   },

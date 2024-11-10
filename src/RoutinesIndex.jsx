@@ -32,7 +32,7 @@ const RoutinesIndex = () => {
   const handleSubmit = async (event, routineId) => {
     await handleUpdateRoutine(event, routineId, () => {
       handleCloseModal();
-      window.location.reload(); // This is a temporary solution - ideally you'd use a more elegant way to refresh the data
+      window.location.reload(); // This is a temporary solution
     });
   };
 
