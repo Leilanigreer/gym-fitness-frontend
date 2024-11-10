@@ -1,5 +1,5 @@
 // src/components/WorkoutLogNew.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import { WorkoutLogForm } from './components/WorkoutLogForm';
@@ -7,15 +7,32 @@ import { WorkoutLogForm } from './components/WorkoutLogForm';
 export function WorkoutLogNew() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
+  const [workoutLogs, setWorkoutLogs] = useState([]);
   
   const { routines = [], logs = [] } = useLoaderData();
 
-  // Arrow function for getting day name
+  useEffect(() => {
+    setWorkoutLogs(logs);
+  }, [logs]);
+
+  const handleLogUpdate = (newLog) => {
+    setWorkoutLogs(currentLogs => {
+      if (newLog.id) {
+        return currentLogs.map(log => 
+          log.id === newLog.id ? newLog : log
+        );
+      }
+      return [...currentLogs, newLog];
+    });
+  };
+
+  useEffect(() => {
+  }, [workoutLogs]);
+
   const getDayName = (date) => {
     return date.toLocaleDateString('en-US', { weekday: 'long' });
   };
 
-  // Arrow functions for navigation handlers
   const goToPreviousDay = () => {
     const newDate = new Date(selectedDate);
     newDate.setDate(selectedDate.getDate() - 1);
@@ -32,7 +49,6 @@ export function WorkoutLogNew() {
     setSelectedDate(new Date());
   };
 
-  // Arrow function for handling calendar selection
   const handleCalendarSelect = (date) => {
     setSelectedDate(date);
     setShowCalendar(false);
@@ -43,10 +59,17 @@ export function WorkoutLogNew() {
     routine.day === getDayName(selectedDate)
   );
 
-  // Get logs for the selected date
   const selectedDateLogs = logs.filter(log => {
-    const logDate = new Date(log.date);
-    return logDate.toDateString() === selectedDate.toDateString();
+    // Create a new date object from the selected date and set to noon
+    const compareDate = new Date(selectedDate);
+    compareDate.setHours(12, 0, 0, 0);
+    
+    // Format the date manually
+    const selectedDateStr = `${compareDate.getFullYear()}-${
+      String(compareDate.getMonth() + 1).padStart(2, '0')}-${
+      String(compareDate.getDate()).padStart(2, '0')}`;
+      
+    return log.workout_date === selectedDateStr;
   });
 
   // Error state display if no routines data
@@ -114,30 +137,25 @@ export function WorkoutLogNew() {
       </h2>
 
       {/* Routines List */}
-      {filteredRoutines.length === 0 ? (
-        <p>No routines scheduled for this day</p>
-      ) : (
-        filteredRoutines.map(routine => {
-          // Find existing log for this routine on this date
-          const existingLog = selectedDateLogs.find(log => 
-            log.routine_id === routine.id
-          );
+      {filteredRoutines.map(routine => {
+        const existingLog = selectedDateLogs.find(log => {
+          return log.routine.id === routine.id;
+        });
 
-          return (
-            <div key={routine.id} className="card mb-3">
-              <div className="card-body">
-                <h5 className="card-title">{routine.exercise.name}</h5>
-                <WorkoutLogForm 
-                  routine={routine} 
-                  selectedDate={selectedDate}
-                  existingLog={existingLog}
-                />
-              </div>
+        return (
+          <div key={routine.id} className="card mb-3">
+            <div className="card-body">
+              <h5 className="card-title">{routine.exercise.name}</h5>
+              <WorkoutLogForm 
+                routine={routine} 
+                selectedDate={selectedDate}
+                existingLog={existingLog}
+                onSuccess={handleLogUpdate}
+              />
             </div>
-          );
-        })
-      )}
+          </div>
+        );
+      })}
     </div>
   );
 }
-

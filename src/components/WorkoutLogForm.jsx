@@ -1,15 +1,21 @@
 // src/components/WorkoutLogForm.jsx
 import { useWorkoutLogForm } from "../hooks/useWorkoutLogForm";
 
-export function WorkoutLogForm({ routine, selectedDate, onSuccess }) {
+export function WorkoutLogForm({ routine, selectedDate, existingLog, onSuccess }) {
   const {
     formData,
     handleSubmit,
     handleInputChange
-  } = useWorkoutLogForm(routine, selectedDate, onSuccess);
+  } = useWorkoutLogForm(routine, selectedDate, existingLog, onSuccess);
 
   return (
     <form onSubmit={handleSubmit}>
+      <div className="card-text mb-3">
+        <small className="text-muted">
+          Goal: {routine.sets} sets of {routine.reps} reps
+        </small>
+      </div>
+
       <div className="mb-3">
         <label className="form-label">Sets Completed</label>
         <input
@@ -43,8 +49,16 @@ export function WorkoutLogForm({ routine, selectedDate, onSuccess }) {
       </div>
 
       <button type="submit" className="btn btn-primary">
-        Log Workout
+        {existingLog ? 'Update Workout' : 'Log Workout'}
       </button>
+
+      {existingLog && (
+        <div className="mt-2">
+          <small className="text-muted">
+            Last updated: {new Date(existingLog.updated_at).toLocaleString()}
+          </small>
+        </div>
+      )}
     </form>
   );
 }
