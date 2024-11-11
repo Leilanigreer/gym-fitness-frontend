@@ -1,36 +1,53 @@
-// src/components/WorkoutLogNew.jsx
-import { useState, useEffect } from 'react';
-import { useLoaderData } from 'react-router-dom';
+// src/WorkoutLog.jsx
+import { useState } from 'react';
+import { useLoaderData, useRevalidator } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import { WorkoutLogForm } from './components/WorkoutLogForm';
 
-export function WorkoutLogNew() {
+export function WorkoutLog() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
-  const [workoutLogs, setWorkoutLogs] = useState([]);
   
-  const { routines = [], logs = [] } = useLoaderData();
+  const { dates = [] } = useLoaderData();
+  console.log(dates);
 
-  useEffect(() => {
-    setWorkoutLogs(logs);
-  }, [logs]);
+  const revalidator = useRevalidator();
 
-  const handleLogUpdate = (newLog) => {
-    setWorkoutLogs(currentLogs => {
-      if (newLog.id) {
-        return currentLogs.map(log => 
-          log.id === newLog.id ? newLog : log
-        );
-      }
-      return [...currentLogs, newLog];
-    });
+  const handleLogUpdate = () => {
+    revalidator.revalidate();
   };
-
-  useEffect(() => {
-  }, [workoutLogs]);
 
   const getDayName = (date) => {
     return date.toLocaleDateString('en-US', { weekday: 'long' });
+  };
+
+  const formatDateForComparison = (date) => {
+    const d = new Date(date);
+    return `${d.getFullYear()}-${
+      String(d.getMonth() + 1).padStart(2, '0')}-${
+      String(d.getDate()).padStart(2, '0')}`;
+  };
+
+  // Find routines for selected date
+  const selectedDateData = dates.find(dateData => 
+    dateData.date === formatDateForComparison(selectedDate)
+  );
+
+  const getNoRoutinesMessage = () => {
+    const today = new Date();
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(today.getMonth() - 1);
+    
+    // If date is in the future
+    if (selectedDate > today) {
+      return "No routines scheduled for this day.";
+    }
+    // If date is more than a month old and no data
+    else if (selectedDate < oneMonthAgo && !selectedDateData) {
+      return "No workouts were logged for this day.";
+    }
+    // Default message for recent dates without data
+    return "No routines scheduled for this day.";
   };
 
   const goToPreviousDay = () => {
@@ -54,30 +71,12 @@ export function WorkoutLogNew() {
     setShowCalendar(false);
   };
 
-  // Filter routines for selected day
-  const filteredRoutines = routines.filter(routine => 
-    routine.day === getDayName(selectedDate)
-  );
-
-  const selectedDateLogs = logs.filter(log => {
-    // Create a new date object from the selected date and set to noon
-    const compareDate = new Date(selectedDate);
-    compareDate.setHours(12, 0, 0, 0);
-    
-    // Format the date manually
-    const selectedDateStr = `${compareDate.getFullYear()}-${
-      String(compareDate.getMonth() + 1).padStart(2, '0')}-${
-      String(compareDate.getDate()).padStart(2, '0')}`;
-      
-    return log.workout_date === selectedDateStr;
-  });
-
-  // Error state display if no routines data
-  if (!Array.isArray(routines)) {
+  // Error state display if no data
+  if (!Array.isArray(dates)) {
     return (
       <div className="alert alert-danger">
-        Error: Failed to load routines data. Please check your loader function.
-        <pre>{JSON.stringify({ routines, logs }, null, 2)}</pre>
+        Error: Failed to load workout data. Please check your loader function.
+        <pre>{JSON.stringify({ dates }, null, 2)}</pre>
       </div>
     );
   }
@@ -137,25 +136,22 @@ export function WorkoutLogNew() {
       </h2>
 
       {/* Routines List */}
-      {filteredRoutines.map(routine => {
-        const existingLog = selectedDateLogs.find(log => {
-          return log.routine.id === routine.id;
-        });
-
-        return (
-          <div key={routine.id} className="card mb-3">
-            <div className="card-body">
-              <h5 className="card-title">{routine.exercise.name}</h5>
-              <WorkoutLogForm 
-                routine={routine} 
-                selectedDate={selectedDate}
-                existingLog={existingLog}
-                onSuccess={handleLogUpdate}
-              />
-            </div>
+      {selectedDateData?.routines.map(routine => (
+        <div key={routine.id} className="card mb-3">
+          <div className="card-body">
+            <h5 className="card-title">{routine.exercise_name}</h5>
+            <WorkoutLogForm 
+              routine={routine} 
+              selectedDate={selectedDate}
+              onSuccess={() => handleLogUpdate()}
+            />
           </div>
-        );
-      })}
+        </div>
+      )) || (
+        <div className="alert alert-info">
+          {getNoRoutinesMessage()}
+        </div>
+      )}
     </div>
   );
 }

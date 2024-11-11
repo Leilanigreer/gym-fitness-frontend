@@ -1,29 +1,24 @@
 // src/hooks/useWorkoutLogForm.js
 import { useState, useEffect } from "react";
-import axios from "axios";
+import apiClient from "../config/axios";
 
-export function useWorkoutLogForm(routine, selectedDate, existingLog, onSuccess) {
+export function useWorkoutLogForm(routine, selectedDate, onSuccess) {
+  const workoutLog = routine.workout_log;
+  const isExisting = Boolean(workoutLog.id);
+
   const [formData, setFormData] = useState({
-    actual_sets: routine.sets,
-    actual_reps: routine.reps,
-    notes: ''
+    actual_sets: workoutLog.actual_sets,
+    actual_reps: workoutLog.actual_reps,
+    notes: workoutLog.notes || ''
   });
 
   useEffect(() => {
-    if (existingLog) {
-      setFormData({
-        actual_sets: existingLog.actual_sets,
-        actual_reps: existingLog.actual_reps,
-        notes: existingLog.notes || ''
-      });
-    } else {
-      setFormData({
-        actual_sets: routine.sets,
-        actual_reps: routine.reps,
-        notes: ''
-      });
-    }
-  }, [existingLog, routine]);
+    setFormData({
+      actual_sets: workoutLog.actual_sets,
+      actual_reps: workoutLog.actual_reps,
+      notes: workoutLog.notes || ''
+    });
+  }, [workoutLog]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,29 +31,31 @@ export function useWorkoutLogForm(routine, selectedDate, existingLog, onSuccess)
       String(dateToUse.getDate()).padStart(2, '0')}`;
     
     const params = {
+      workout_log: {
         routine_id: routine.id,
         workout_date: formattedDate,
         completed: true,
         ...formData
+      }
     };
 
     try {
-      let response;
-      if (existingLog) {
-        response = await axios.patch(
-          `http://localhost:3000/workout_logs/${existingLog.id}.json`,
+      if (isExisting) {
+        await apiClient.patch(
+          `/workout_logs/${workoutLog.id}.json`,
           params
         );
       } else {
-        response = await axios.post("http://localhost:3000/workout_logs.json", params);
+        await apiClient.post("/workout_logs.json", params);
       }
-      
-      if (onSuccess) onSuccess(response.data);
+
+      if (typeof onSuccess === 'function') {
+        onSuccess();
+      }
     } catch (error) {
       console.error("Error logging workout:", error);
     }
   };
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -71,6 +68,7 @@ export function useWorkoutLogForm(routine, selectedDate, existingLog, onSuccess)
   return {
     formData,
     handleSubmit,
-    handleInputChange
+    handleInputChange,
+    isExisting
   };
 }

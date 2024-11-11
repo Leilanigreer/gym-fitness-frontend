@@ -1,18 +1,26 @@
 // src/components/WorkoutLogForm.jsx
 import { useWorkoutLogForm } from "../hooks/useWorkoutLogForm";
 
-export function WorkoutLogForm({ routine, selectedDate, existingLog, onSuccess }) {
+export function WorkoutLogForm({ routine, selectedDate, onSuccess }) {
+  const workoutLog = routine.workout_log;
+  const isExisting = Boolean(workoutLog.id);
+
   const {
     formData,
     handleSubmit,
     handleInputChange
-  } = useWorkoutLogForm(routine, selectedDate, existingLog, onSuccess);
+  } = useWorkoutLogForm(routine, selectedDate, onSuccess);
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="card-text mb-3">
         <small className="text-muted">
           Goal: {routine.sets} sets of {routine.reps} reps
+        </small>
+      </div>
+      <div>
+        <small>
+          Routine: {routine.id} {isExisting && `- Log ID ${workoutLog.id}`}
         </small>
       </div>
 
@@ -49,13 +57,13 @@ export function WorkoutLogForm({ routine, selectedDate, existingLog, onSuccess }
       </div>
 
       <button type="submit" className="btn btn-primary">
-        {existingLog ? 'Update Workout' : 'Log Workout'}
+        {isExisting ? 'Update Workout' : 'Log Workout'}
       </button>
 
-      {existingLog && (
+      {isExisting && workoutLog.updated_at && (
         <div className="mt-2">
           <small className="text-muted">
-            Last updated: {new Date(existingLog.updated_at).toLocaleString()}
+            Last updated: {new Date(workoutLog.updated_at).toLocaleString()}
           </small>
         </div>
       )}
