@@ -1,6 +1,6 @@
 // src/hooks/useRoutineForm.js
 import { useState } from "react";
-import axios from "axios";
+import apiClient from "../config/axios";
 
 export function useRoutineForm() {
   const [formData, setFormData] = useState({
@@ -20,7 +20,7 @@ export function useRoutineForm() {
     };
 
     try {
-      await axios.post("http://localhost:3000/routines.json", params);
+      await apiClient.post("/routines.json", params);
       
       // Clear form data for this exercise
       setFormData(prev => ({
@@ -49,7 +49,7 @@ export function useRoutineForm() {
       day: formData.day[routineId],
     };
     try {
-      await axios.patch(`http://localhost:3000/routines/${routineId}.json`, params);
+      await apiClient.patch(`/routines/${routineId}.json`, params);
       
       setFormData(prev => ({
         reps: { ...prev.reps, [routineId]: "" },

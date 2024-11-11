@@ -1,6 +1,6 @@
 // src/HomePage.jsx
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient from './config/axios';
 import { Link } from 'react-router-dom';
 import { isAuthenticated } from './utils/auth';
 
@@ -11,7 +11,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const getUserData = () => {
-      axios.get("http://localhost:3000/users/current.json")
+      apiClient.get("/users/current.json")
         .then(response => {
           console.log(response.data);
           setCurrentUser(response.data);

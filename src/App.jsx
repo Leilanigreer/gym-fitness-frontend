@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
-import axios from "axios";
+import apiClient from "./config/axios";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { ExercisesIndex } from "./ExercisesIndex";
@@ -7,7 +7,8 @@ import { LoginPage } from "./LoginPage";
 import { SignupPage } from "./SignupPage";
 import  RoutinesIndex  from "./RoutinesIndex";
 import  HomePage from "./HomePage";
-import { WorkoutLogNew } from "./WorkoutLogNew";
+// import { WorkoutLogNew } from "./WorkoutLogNew";
+import { WorkoutLog } from "./WorkoutLog";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,7 @@ const router = createBrowserRouter([
       {
         path: "/Exercises",
         element: <ExercisesIndex />,
-        loader: () => axios.get("http://localhost:3000/exercises.json").then((response) => response.data),
+        loader: () => apiClient.get("/exercises.json").then((response) => response.data),
       },
       {
         path: "/signup",
@@ -45,24 +46,29 @@ const router = createBrowserRouter([
       {
         path: "/routines",
         element: <RoutinesIndex />,
-        loader: () => axios.get("http://localhost:3000/routines.json").then((response) => response.data),
+        loader: () => apiClient.get("/routines.json").then((response) => response.data),
       },
       {
         path: "/workout_log",
-        element: <WorkoutLogNew />,
-        loader: async () => {
-          // Load both routines and workout logs
-          const [routinesResponse, logsResponse] = await Promise.all([
-            axios.get("http://localhost:3000/routines.json"),
-            axios.get("http://localhost:3000/workout_logs.json")
-          ]);
-          
-          return {
-            routines: routinesResponse.data,
-            logs: logsResponse.data
-          };
-        }
+        element: <WorkoutLog />,
+        loader: () => apiClient.get("/workout_logs.json").then((response) => response.data),
       },
+      // {
+      //   path: "/workout_log",
+      //   element: <WorkoutLogNew />,
+      //   loader: async () => {
+      //     // Load both routines and workout logs
+      //     const [routinesResponse, logsResponse] = await Promise.all([
+      //       apiClient.get("/routines.json"),
+      //       apiClient.get("/workout_logs.json")
+      //     ]);
+          
+      //     return {
+      //       routines: routinesResponse.data,
+      //       logs: logsResponse.data
+      //     };
+      //   }
+      // },
     ],
   },
 ]);

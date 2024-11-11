@@ -1,9 +1,9 @@
-import axios from "axios";
+import apiClient from "./config/axios";
 import { useState } from "react";
 
 const jwt = localStorage.getItem("jwt");
 if (jwt) {
-  axios.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
+  apiClient.defaults.headers.common["Authorization"] = `Bearer ${jwt}`;
 }
 
 export function LoginPage() {
@@ -13,10 +13,10 @@ export function LoginPage() {
     event.preventDefault();
     setErrors([]);
     const params = new FormData(event.target);
-    axios
-      .post("http://localhost:3000/sessions.json", params)
+    apiClient
+      .post("/sessions.json", params)
       .then((response) => {
-        axios.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
+        apiClient.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
         localStorage.setItem("jwt", response.data.jwt);
         event.target.reset();
         window.location.href = "/"; // Change this to hide a modal, redirect to a specific page, etc.
