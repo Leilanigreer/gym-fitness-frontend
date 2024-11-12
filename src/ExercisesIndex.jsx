@@ -1,5 +1,5 @@
 // src/ExercisesIndex.jsx
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useRevalidator } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { RoutineForm } from "./components/RoutineForm";
 import { useRoutineForm } from "./hooks/useRoutineForm";
@@ -7,6 +7,7 @@ import { isAuthenticated } from "./utils/auth";
 import { useState, useMemo } from "react";
 
 export function ExercisesIndex() {
+  const revalidator = useRevalidator();
   const exercises = useLoaderData();
 
   const [filters, setFilters] = useState({
@@ -42,6 +43,11 @@ export function ExercisesIndex() {
   }, [exercises]);
 
   const { formData, handleAddExercise, handleFieldChange } = useRoutineForm();
+
+  const handleRoutineSubmit = async (event, exerciseId) => {
+    await handleAddExercise(event, exerciseId);
+    revalidator.revalidate();
+  };
 
   const handleFilterChange = (filterType, value) => {
     setFilters(prevFilters => ({
@@ -107,7 +113,7 @@ export function ExercisesIndex() {
           <div className="card card-body bg-light">
             <RoutineForm
               exerciseId={exercise.id}
-              onSubmit={handleAddExercise}
+              onSubmit={handleRoutineSubmit}
               onFieldChange={handleFieldChange}
               formData={formData}
             />
@@ -132,8 +138,8 @@ export function ExercisesIndex() {
           <h1 className="display-4 mb-4 fw-bold text-purple text-center">
             Are you ready to get in shape? Here we go!
           </h1>
-            <div className="row-g4">
-              <h2> This is just a test</h2>
+            <div className="row mb-4">
+            <div className="col-md-4">
               <select 
                 className="form-select" 
                 value={filters.level}
@@ -147,6 +153,9 @@ export function ExercisesIndex() {
                   </option>
                 ))}
               </select>
+            </div>
+            
+            <div className="col-md-4">
               <select 
                 className="form-select"
                 value={filters.category}
@@ -160,6 +169,9 @@ export function ExercisesIndex() {
                   </option>
                 ))}
               </select>
+            </div>
+            
+            <div className="col-md-4">
               <select 
                 className="form-select"
                 value={filters.equipment}
@@ -173,6 +185,7 @@ export function ExercisesIndex() {
                   </option>
                 ))}
               </select>
+            </div>
           </div>
           <div className="row g-4">
             {filteredExercises.map((exercise) => (

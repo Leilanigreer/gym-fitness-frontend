@@ -17,7 +17,6 @@ export function RoutineForm({ onSubmit, exerciseId, formData = {}, onFieldChange
         <select
           id={`day-${exerciseId}`}
           className="form-control"
-          name="day"
           value={day[exerciseId] || ""}
           onChange={(e) => handleChange("day", e.target.value)}
         >
@@ -36,7 +35,6 @@ export function RoutineForm({ onSubmit, exerciseId, formData = {}, onFieldChange
           type="number"
           value={reps[exerciseId] || ""}
           onChange={(e) => handleChange("reps", e.target.value)}
-          name="reps"
           className="form-control mb-2"
         />
       </div>
@@ -47,7 +45,6 @@ export function RoutineForm({ onSubmit, exerciseId, formData = {}, onFieldChange
           type="number"
           value={sets[exerciseId] || ""}
           onChange={(e) => handleChange("sets", e.target.value)}
-          name="sets"
           className="form-control mb-2"
         />
       </div>
