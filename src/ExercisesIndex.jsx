@@ -8,7 +8,7 @@ import { useState, useMemo } from "react";
 
 export function ExercisesIndex() {
   const exercises = useLoaderData();
-  // console.log(exercises);
+
   const [filters, setFilters] = useState({
     level: '',
     category: '',
@@ -17,9 +17,27 @@ export function ExercisesIndex() {
 
   const uniqueValues = useMemo(() => {
     return {
-      level: [...new Set(exercises.map(ex => ex.level))].filter(Boolean).sort(),
-      category: [...new Set(exercises.map(ex => ex.category))].filter(Boolean).sort(),
-      equipment: [...new Set(exercises.map(ex => ex.equipment))].filter(Boolean).sort()
+      level: [...new Set(exercises.map(ex => ex.level))]
+        .filter(Boolean)
+        .sort()
+        .map(level => ({
+          value: level,
+          display: exercises.find(ex => ex.level === level).capital_level
+        })),
+      category: [...new Set(exercises.map(ex => ex.category))]
+        .filter(Boolean)
+        .sort()
+        .map(category => ({
+          value: category,
+          display: exercises.find(ex => ex.category === category).capital_category
+        })),
+      equipment: [...new Set(exercises.map(ex => ex.equipment))]
+        .filter(Boolean)
+        .sort()
+        .map(equipment => ({
+          value: equipment,
+          display: exercises.find(ex => ex.equipment === equipment).capital_equipment
+        }))
     };
   }, [exercises]);
 
@@ -114,50 +132,48 @@ export function ExercisesIndex() {
           <h1 className="display-4 mb-4 fw-bold text-purple text-center">
             Are you ready to get in shape? Here we go!
           </h1>
-          <h2> This is just a test</h2>
-          <select 
-            className="form-select" 
-            value={filters.level}
-            onChange={(e) => handleFilterChange('level', e.target.value)}
-            aria-label="Exercise level"
-          >
-            <option value="">Exercise Level</option>
-            {uniqueValues.level.map(level => (
-              <option key={level} value={level}>
-                {level.charAt(0).toUpperCase() + level.slice(1)}
-              </option>
-            ))}
-          </select>
-          <select 
-            className="form-select"
-            value={filters.category}
-            onChange={(e) => handleFilterChange('category', e.target.value)}
-            aria-label="Exercise Category"
-          >
-            <option value="">Category</option>
-            {uniqueValues.category.map(category => (
-              <option key={category} value={category}>
-                {category.split(' ').map(word => 
-                  word.charAt(0).toUpperCase() + word.slice(1)
-                ).join(' ')}
-              </option>
-            ))}
-          </select>
-          <select 
-            className="form-select"
-            value={filters.equipment}
-            onChange={(e) => handleFilterChange('equipment', e.target.value)}
-            aria-label="Exercise Equipment"
-          >
-            <option value="">Equipment</option>
-            {uniqueValues.equipment.map(equipment => (
-              <option key={equipment} value={equipment}>
-                {equipment.split(' ').map(word => 
-                  word.charAt(0).toUpperCase() + word.slice(1)
-                ).join(' ')}
-              </option>
-            ))}
-          </select>
+            <div className="row-g4">
+              <h2> This is just a test</h2>
+              <select 
+                className="form-select" 
+                value={filters.level}
+                onChange={(e) => handleFilterChange('level', e.target.value)}
+                aria-label="Exercise level"
+              >
+                <option value="">Exercise Level</option>
+                {uniqueValues.level.map(level => (
+                  <option key={level.value} value={level.value}>
+                    {level.display}
+                  </option>
+                ))}
+              </select>
+              <select 
+                className="form-select"
+                value={filters.category}
+                onChange={(e) => handleFilterChange('category', e.target.value)}
+                aria-label="Exercise Category"
+              >
+                <option value="">Category</option>
+                {uniqueValues.category.map(category => (
+                  <option key={category.value} value={category.value}>
+                    {category.display}
+                  </option>
+                ))}
+              </select>
+              <select 
+                className="form-select"
+                value={filters.equipment}
+                onChange={(e) => handleFilterChange('equipment', e.target.value)}
+                aria-label="Exercise Equipment"
+              >
+                <option value="">Equipment</option>
+                {uniqueValues.equipment.map(equipment => (
+                  <option key={equipment.value} value={equipment.value}>
+                    {equipment.display}
+                  </option>
+                ))}
+              </select>
+          </div>
           <div className="row g-4">
             {filteredExercises.map((exercise) => (
               <div key={exercise.id} className="col-sm-6 col-md-4 col-lg-3">
@@ -195,9 +211,9 @@ export function ExercisesIndex() {
                   )}
                   <div className="card-body">
                     <h3 className="h5 card-title">{exercise.name}</h3>
-                    <p className="card-text">{exercise.level}</p>
-                    <p className="card-text">{exercise.category}</p>
-                    <p className="card-text">{exercise.equipment}</p>
+                    <p className="card-text">Level: {exercise.capital_level}</p>
+                    <p className="card-text">Category: {exercise.capital_category}</p>
+                    <p className="card-text">Equipment: {exercise.capital_equipment}</p>
                     
                     {/* <p className="card-text">{exercise.instructions}</p> */}
                     {/* <Link 
