@@ -18,13 +18,9 @@ export function WorkoutLogForm({ routine, selectedDate, onSuccess }) {
           Goal: {routine.sets} sets of {routine.reps} reps
         </small>
       </div>
-      <div>
-        <small>
-          Routine: {routine.id} {isExisting && `- Log ID ${workoutLog.id}`}
-        </small>
-      </div>
 
-      <div className="mb-3">
+      <div className="row g-3">
+      <div className="col-md-6">
         <label className="form-label">Sets Completed</label>
         <input
           type="number"
@@ -35,7 +31,7 @@ export function WorkoutLogForm({ routine, selectedDate, onSuccess }) {
         />
       </div>
 
-      <div className="mb-3">
+      <div className="col-md-6">
         <label className="form-label">Reps per Set</label>
         <input
           type="number"
@@ -44,6 +40,7 @@ export function WorkoutLogForm({ routine, selectedDate, onSuccess }) {
           value={formData.actual_reps}
           onChange={handleInputChange}
         />
+      </div>
       </div>
 
       <div className="mb-3">

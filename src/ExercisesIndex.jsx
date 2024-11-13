@@ -1,20 +1,40 @@
 // src/ExercisesIndex.jsx
 import { useLoaderData, useRevalidator } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { RoutineForm } from "./components/RoutineForm";
+import ExerciseModal from "./components/ExerciseModal";
+import ExerciseCard from "./components/ExerciseCard";
 import { useRoutineForm } from "./hooks/useRoutineForm";
 import { isAuthenticated } from "./utils/auth";
 import { useState, useMemo } from "react";
 
 export function ExercisesIndex() {
+  const [selectedExercise, setSelectedExercise] = useState('');
   const revalidator = useRevalidator();
   const exercises = useLoaderData();
+  const ITEMS_PER_PAGE = 20;
 
-  const [filters, setFilters] = useState({
+  const handleLearnMoreClick = (exercise) => {
+    setSelectedExercise(exercise);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedExercise('');
+  };
+
+  const [activeFilters, setActiveFilters] = useState({
     level: '',
     category: '',
-    equipment: ''
+    equipment: '',
+    primary_muscles: ''
   });
+
+  const [pendingFilters, setPendingFilters] = useState({
+    level: '',
+    category: '',
+    equipment: '',
+    primary_muscles: ''
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
 
   const uniqueValues = useMemo(() => {
     return {
@@ -38,6 +58,13 @@ export function ExercisesIndex() {
         .map(equipment => ({
           value: equipment,
           display: exercises.find(ex => ex.equipment === equipment).capital_equipment
+        })),
+      primary_muscles: [...new Set(exercises.map(ex => ex.primary_muscles[0]))]
+        .filter(Boolean)
+        .sort()
+        .map(primary_muscles => ({
+          value: primary_muscles,
+          display: exercises.find(ex => ex.primary_muscles[0] === primary_muscles).capital_primary_muscles
         }))
     };
   }, [exercises]);
@@ -50,85 +77,75 @@ export function ExercisesIndex() {
   };
 
   const handleFilterChange = (filterType, value) => {
-    setFilters(prevFilters => ({
-      ...prevFilters,
+    setPendingFilters(prev => ({
+      ...prev,
       [filterType]: value
     }));
   };
 
-  const filteredExercises = exercises.filter(exercise => {
-    return (
-      (filters.level === '' || exercise.level === filters.level) &&
-      (filters.category === '' || exercise.category === filters.category) &&
-      (filters.equipment === '' || exercise.equipment === filters.equipment)
-    );
-  });
-
-  const renderScheduledDays = (exercise) => {
-    if (!isAuthenticated() || !exercise.scheduled_days || 
-        Object.keys(exercise.scheduled_days).length === 0) {
-      return null;
-    }
-
-    return (
-      <div className="mt-3 mb-3">
-        <small className="text-muted d-block mb-2">Currently scheduled on:</small>
-        <div className="d-flex flex-wrap gap-2">
-          {Object.entries(exercise.scheduled_days).map(([day]) => (
-            <span key={day} className="badge bg-secondary">
-              {day}
-            </span>
-          ))}
-        </div>
-      </div>
-    );
+  const handleApplyFilters = () => {
+    setActiveFilters(pendingFilters);
+    setCurrentPage(1); // Reset to first page when new filters are applied
   };
 
-  const renderAddRoutineSection = (exercise) => {
-    if (!isAuthenticated()) {
+  const handleResetFilters = () => {
+    const emptyFilters = {
+      level: '',
+      category: '',
+      equipment: '',
+      primary_muscles: ''
+    };
+    setActiveFilters(emptyFilters);
+    setPendingFilters(emptyFilters);
+    setCurrentPage(1);
+  };
+
+  const hasFilterChanges = useMemo(() => {
+    return Object.keys(activeFilters).some(
+      key => activeFilters[key] !== pendingFilters[key]
+    );
+  }, [activeFilters, pendingFilters]);
+
+  const filteredExercises = useMemo(() => {
+    return exercises.filter(exercise => {
       return (
-        <div className="mt-3">
-          <div className="alert alert-info" role="alert">
-            <Link to="/login" className="alert-link">Log in</Link> or{" "}
-            <Link to="/signup" className="alert-link">sign up</Link>{" "}
-            to add this exercise to your routine!
-          </div>
-        </div>
+        (activeFilters.level === '' || exercise.level === activeFilters.level) &&
+        (activeFilters.category === '' || exercise.category === activeFilters.category) &&
+        (activeFilters.equipment === '' || exercise.equipment === activeFilters.equipment) &&
+        (activeFilters.primary_muscles === '' || exercise.primary_muscles[0] === activeFilters.primary_muscles)
       );
-    }
+    });
+  }, [activeFilters, exercises]);
 
-    return (
-      <div className="mt-3">
-        <button 
-          className="btn btn-success btn-sm" 
-          type="button" 
-          data-bs-toggle="collapse" 
-          data-bs-target={`#routineForm${exercise.id}`}
-          aria-expanded="false"
-        >
-          + Add to Routine
-        </button>
-        
-        <div className="collapse" id={`routineForm${exercise.id}`}>
-          <div className="card card-body bg-light">
-            <RoutineForm
-              exerciseId={exercise.id}
-              onSubmit={handleRoutineSubmit}
-              onFieldChange={handleFieldChange}
-              formData={formData}
-            />
-          </div>
-        </div>
-      </div>
-    );
+  const totalItems = filteredExercises.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+  const currentExercises = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredExercises.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredExercises, currentPage]);
+
+  const handlePageChange = (newPage) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setCurrentPage(newPage);
   };
 
-  const getImageUrl = (imagePath) => {
-    if (imagePath.startsWith('http')) {
-      return imagePath;
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+    
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
-    const baseUrl = 'http://localhost:3000'; // Change this to match your Rails server URL
-    return `${baseUrl}${imagePath}`;
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+
+    return pageNumbers;
   };
 
   return (
@@ -138,113 +155,179 @@ export function ExercisesIndex() {
           <h1 className="display-4 mb-4 fw-bold text-purple text-center">
             Are you ready to get in shape? Here we go!
           </h1>
-            <div className="row mb-4">
-            <div className="col-md-4">
-              <select 
-                className="form-select" 
-                value={filters.level}
-                onChange={(e) => handleFilterChange('level', e.target.value)}
-                aria-label="Exercise level"
-              >
-                <option value="">Exercise Level</option>
-                {uniqueValues.level.map(level => (
-                  <option key={level.value} value={level.value}>
-                    {level.display}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="col-md-4">
-              <select 
-                className="form-select"
-                value={filters.category}
-                onChange={(e) => handleFilterChange('category', e.target.value)}
-                aria-label="Exercise Category"
-              >
-                <option value="">Category</option>
-                {uniqueValues.category.map(category => (
-                  <option key={category.value} value={category.value}>
-                    {category.display}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="col-md-4">
-              <select 
-                className="form-select"
-                value={filters.equipment}
-                onChange={(e) => handleFilterChange('equipment', e.target.value)}
-                aria-label="Exercise Equipment"
-              >
-                <option value="">Equipment</option>
-                {uniqueValues.equipment.map(equipment => (
-                  <option key={equipment.value} value={equipment.value}>
-                    {equipment.display}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="row g-4">
-            {filteredExercises.map((exercise) => (
-              <div key={exercise.id} className="col-sm-6 col-md-4 col-lg-3">
-                <div className="card h-100 shadow-sm">
-                  {exercise.images && exercise.images.length > 0 && (
-                    <div id={`carousel-${exercise.id}`} className="carousel slide" data-bs-ride="carousel">
-                      <div className="carousel-inner">
-                        {exercise.images.map((image, index) => (
-                          <div key={index} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                            <img 
-                              src={getImageUrl(image)}
-                              className="card-img-top d-block w-100"
-                              alt={`${exercise.name} position ${index + 1}`}
-                              onError={(e) => {
-                                console.error(`Failed to load image: ${image}`);
-                                e.target.src = '/placeholder-exercise.png';
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      {exercise.images.length > 1 && (
-                        <>
-                          <button className="carousel-control-prev" type="button" data-bs-target={`#carousel-${exercise.id}`} data-bs-slide="prev">
-                            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span className="visually-hidden">Previous</span>
-                          </button>
-                          <button className="carousel-control-next" type="button" data-bs-target={`#carousel-${exercise.id}`} data-bs-slide="next">
-                            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span className="visually-hidden">Next</span>
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  )}
-                  <div className="card-body">
-                    <h3 className="h5 card-title">{exercise.name}</h3>
-                    <p className="card-text">Level: {exercise.capital_level}</p>
-                    <p className="card-text">Category: {exercise.capital_category}</p>
-                    <p className="card-text">Equipment: {exercise.capital_equipment}</p>
-                    
-                    {/* <p className="card-text">{exercise.instructions}</p> */}
-                    {/* <Link 
-                      to={exercise.video_url} 
-                      className="text-decoration-none"
-                    >
-                      Watch the video
-                    </Link> */}
-                    
-                    {renderScheduledDays(exercise)}
-                    {renderAddRoutineSection(exercise)}
-                  </div>
+
+            <div className="card mb-4">
+            <div className="card-body">
+              <div className="row g-3">
+                <div className="col-md-3">
+                  <select 
+                    className="form-select" 
+                    value={pendingFilters.level}
+                    onChange={(e) => handleFilterChange('level', e.target.value)}
+                    aria-label="Exercise level"
+                  >
+                    <option value="">Exercise Level</option>
+                    {uniqueValues.level.map(level => (
+                      <option key={level.value} value={level.value}>
+                        {level.display}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="col-md-3">
+                  <select 
+                    className="form-select"
+                    value={pendingFilters.category}
+                    onChange={(e) => handleFilterChange('category', e.target.value)}
+                    aria-label="Exercise Category"
+                  >
+                    <option value="">Category</option>
+                    {uniqueValues.category.map(category => (
+                      <option key={category.value} value={category.value}>
+                        {category.display}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="col-md-3">
+                  <select 
+                    className="form-select"
+                    value={pendingFilters.equipment}
+                    onChange={(e) => handleFilterChange('equipment', e.target.value)}
+                    aria-label="Exercise Equipment"
+                  >
+                    <option value="">Equipment</option>
+                    {uniqueValues.equipment.map(equipment => (
+                      <option key={equipment.value} value={equipment.value}>
+                        {equipment.display}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-md-3">
+                  <select 
+                    className="form-select"
+                    value={pendingFilters.primary_muscles}
+                    onChange={(e) => handleFilterChange('primary_muscles', e.target.value)}
+                    aria-label="Primary Muscles"
+                  >
+                    <option value="">Primary Muscles</option>
+                    {uniqueValues.primary_muscles.map(primary_muscles => (
+                      <option key={primary_muscles.value} value={primary_muscles.value}>
+                        {primary_muscles.display}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
-            ))}
+
+              <div className="row mt-3">
+                <div className="col-12 d-flex justify-content-end gap-2">
+                  <button 
+                    className="btn btn-secondary"
+                    onClick={handleResetFilters}
+                    disabled={!Object.values(activeFilters).some(filter => filter !== '')}
+                  >
+                    Reset Filters
+                  </button>
+                  <button 
+                    className="btn btn-primary"
+                    onClick={handleApplyFilters}
+                    disabled={!hasFilterChanges}
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <div className="mb-4 text-center">
+            <p className="text-muted">
+              Showing {Math.min(ITEMS_PER_PAGE, filteredExercises.length)} of {filteredExercises.length} exercises
+              {Object.values(activeFilters).some(filter => filter !== '') && " (filtered)"}
+            </p>
+          </div>
+
+          <div className="row g-4">
+          {currentExercises.map((exercise) => (
+            <div key={exercise.id} className="col-sm-6 col-md-4 col-lg-3">
+              <ExerciseCard
+                exercise={exercise}
+                isAuthenticated={isAuthenticated()}
+                onRoutineSubmit={handleRoutineSubmit}
+                onFieldChange={handleFieldChange}
+                formData={formData}
+                onLearnMore={handleLearnMoreClick}
+              />
+            </div>
+          ))}
+          </div>
+
+        {totalPages > 1 && (
+            <nav className="mt-4" aria-label="Exercise pagination">
+              <ul className="pagination justify-content-center">
+                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(1)}
+                    disabled={currentPage === 1}
+                  >
+                    ««
+                  </button>
+                </li>
+                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    «
+                  </button>
+                </li>
+                {getPageNumbers().map(pageNum => (
+                  <li
+                    key={pageNum}
+                    className={`page-item ${pageNum === currentPage ? 'active' : ''}`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(pageNum)}
+                    >
+                      {pageNum}
+                    </button>
+                  </li>
+                ))}
+                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    »
+                  </button>
+                </li>
+                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(totalPages)}
+                    disabled={currentPage === totalPages}
+                  >
+                    »»
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          )}
         </div>
       </div>
+      <ExerciseModal 
+        selectedExercise={selectedExercise} 
+        onClose={handleCloseModal} 
+      />
     </div>
   );
 }

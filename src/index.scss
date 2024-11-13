@@ -1,11 +1,15 @@
 // Custom Bootstrap variables
 $primary: #5D3E8D; // A nice purple for your primary actions
 $success: #7E5BB7; // A lighter purple for secondary actions
+$info: #FD9843;
+$shadow-color: rgba(0, 0, 0, 0.1);
+$shadow-color-darker: rgba(0, 0, 0, 0.06);
 
 // Custom color map
 $custom-colors: (
   "purple": #5D3E8D,
-  "purple-light": #7E5BB7
+  "purple-light": #7E5BB7,
+  "medium-orange": #FD9843
 );
 
 // Font imports
@@ -15,7 +19,7 @@ $custom-colors: (
 // Bootstrap import
 @import "bootstrap/scss/bootstrap";
 
-// Additional custom styles can go here
+// Button hover states
 .btn-primary {
   &:hover {
     background-color: darken($primary, 10%);
@@ -26,4 +30,23 @@ $custom-colors: (
   &:hover {
     background-color: darken($success, 10%);
   }
+}
+
+// Card and element transitions
+.hover-shadow-md {
+  transition: box-shadow 0.3s ease-in-out;
+
+  &:hover {
+    box-shadow:
+      0 4px 6px -1px $shadow-color,
+      0 2px 4px -1px $shadow-color-darker !important;
+  }
+}
+
+.bg-purple {
+  background-color: $primary !important;
+}
+
+.transition {
+  transition: all 0.3s ease-in-out;
 }
