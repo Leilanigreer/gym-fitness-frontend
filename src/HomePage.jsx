@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react';
 import apiClient from './config/axios';
 import { Link } from 'react-router-dom';
 import { isAuthenticated } from './utils/auth';
-import logo from './assets/Bigger_Get_in_Shape.png';
 
 
 const HomePage = () => {
   const [currentUser, setCurrentUser] = useState({});
   const primaryButtonClass = "btn btn-primary btn-lg px-4 py-2 shadow-sm";
   const secondaryButtonClass = "btn btn-success btn-lg px-4 py-2 shadow-sm";
+  const logo = 'gis_logo.png'; 
 
   useEffect(() => {
     const getUserData = () => {

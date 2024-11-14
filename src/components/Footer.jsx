@@ -1,7 +1,6 @@
-
-import logo from '../assets/Bigger_Get_in_Shape.png';
-
 export function Footer() {
+  const logo = 'gis_logo.png'; 
+
   return (
     <footer className="navbar fixed-bottom" style={{ backgroundColor: '#2D0A31' }}>
       <div className="container-fluid">
