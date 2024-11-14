@@ -71,7 +71,7 @@ const HomePage = () => {
                       All Routines
                     </Link>
                     <Link 
-                      to="/routines"
+                      to="/workout_log"
                       className={secondaryButtonClass}
                     >
                       Today&apos;s Routine

@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { RoutineForm } from '../components/RoutineForm';
+import { getImageUrl } from '../utils/imageUtils';
 
 const ExerciseCard = ({ 
   exercise, 
@@ -11,10 +12,18 @@ const ExerciseCard = ({
   onLearnMore
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [failedImages, setFailedImages] = useState(new Set());
 
-  const getImageUrl = (imagePath) => {
-    if (imagePath.startsWith('http')) return imagePath;
-    return `http://localhost:3000${imagePath}`;
+  useEffect(() => {
+    console.log('Exercise images:', exercise.images);
+    console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+  }, [exercise]);
+
+  const handleImageError = (imageUrl, error) => {
+    console.error('Image load failed:', imageUrl, error);
+    if (!failedImages.has(imageUrl)) {
+      setFailedImages(prev => new Set(prev).add(imageUrl));
+    }
   };
 
   const handleImageNavigation = (direction) => (e) => {
@@ -35,28 +44,39 @@ const ExerciseCard = ({
       </div>
 
       {/* Image Carousel */}
-      {exercise.images?.length > 0 && (
+        {exercise.images?.length > 0 && (
         <div className="position-relative">
           <div className="carousel slide">
             <div className="carousel-inner">
-              {exercise.images.map((image, index) => (
-                <div key={index} className={`carousel-item ${index === currentImageIndex ? 'active' : ''}`}>
-                  <img
-                    src={getImageUrl(image)}
-                    className="card-img-top"
-                    style={{ height: '200px', objectFit: 'cover' }}
-                    alt={`${exercise.name} position ${index + 1}`}
-                    onError={(e) => { e.target.src = '/placeholder-exercise.png'; }}
-                  />
-                </div>
-              ))}
+              {exercise.images.map((image, index) => {
+                const imageUrl = getImageUrl(image);
+                return (
+                  <div key={index} className={`carousel-item ${index === currentImageIndex ? 'active' : ''}`}>
+                    <img
+                      src={failedImages.has(imageUrl) ? 'https://bluemoji.io/cdn-proxy/646218c67da47160c64a84d5/646341573a0b4fac8bf02fc7_18.png' : imageUrl}
+                      className="card-img-top"
+                      style={{ height: '200px', objectFit: 'cover' }}
+                      alt={`${exercise.name} position ${index + 1}`}
+                      onError={(e) => handleImageError(imageUrl, e)}
+                    />
+                  </div>
+                );
+              })}
             </div>
             {exercise.images.length > 1 && (
               <>
-                <button className="carousel-control-prev" onClick={handleImageNavigation('prev')}>
+                <button 
+                  className="carousel-control-prev" 
+                  onClick={handleImageNavigation('prev')}
+                  type="button"
+                >
                   <span className="carousel-control-prev-icon" />
                 </button>
-                <button className="carousel-control-next" onClick={handleImageNavigation('next')}>
+                <button 
+                  className="carousel-control-next" 
+                  onClick={handleImageNavigation('next')}
+                  type="button"
+                >
                   <span className="carousel-control-next-icon" />
                 </button>
               </>
@@ -93,7 +113,7 @@ const ExerciseCard = ({
           </div>
         </div>
 
-        {/* Schedule Section - Only shown when authenticated and has scheduled days */}
+        {/* Schedule Section */}
         {isAuthenticated && exercise.scheduled_days && Object.keys(exercise.scheduled_days).length > 0 && (
           <div className="border-bottom pb-3">
             <small className="text-muted d-block mb-2">Scheduled Days:</small>
