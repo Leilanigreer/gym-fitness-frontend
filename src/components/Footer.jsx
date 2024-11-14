@@ -8,7 +8,7 @@ export function Footer() {
         <div className="row w-100 align-items-center justify-content-between">
           <div className="col-auto">
             <p className="mb-0 text-white">
-              <small>Copyright © {new Date().getFullYear()} Leilani's imagination</small>
+              <small>Copyright © {new Date().getFullYear()} Leilani&apos;s imagination</small>
             </p>
           </div>
           <div className="col-auto">

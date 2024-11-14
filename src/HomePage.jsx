@@ -74,7 +74,7 @@ const HomePage = () => {
                       to="/routines"
                       className={secondaryButtonClass}
                     >
-                      Today's Routine
+                      Today&apos;s Routine
                     </Link>
                   </div>
                 ) : (

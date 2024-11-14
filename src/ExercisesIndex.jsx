@@ -8,33 +8,24 @@ import { useState, useMemo } from "react";
 
 export function ExercisesIndex() {
   const [selectedExercise, setSelectedExercise] = useState('');
-  const revalidator = useRevalidator();
-  const exercises = useLoaderData();
-  const ITEMS_PER_PAGE = 20;
-
-  const handleLearnMoreClick = (exercise) => {
-    setSelectedExercise(exercise);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedExercise('');
-  };
-
   const [activeFilters, setActiveFilters] = useState({
     level: '',
     category: '',
     equipment: '',
     primary_muscles: ''
   });
-
+  
   const [pendingFilters, setPendingFilters] = useState({
-    level: '',
-    category: '',
-    equipment: '',
+  level: '',
+  category: '',
+  equipment: '',
     primary_muscles: ''
-  });
+  });  
 
   const [currentPage, setCurrentPage] = useState(1);
+  const revalidator = useRevalidator();
+  const exercises = useLoaderData();
+  const ITEMS_PER_PAGE = 20;
 
   const uniqueValues = useMemo(() => {
     return {
@@ -68,38 +59,6 @@ export function ExercisesIndex() {
         }))
     };
   }, [exercises]);
-
-  const { formData, handleAddExercise, handleFieldChange } = useRoutineForm();
-
-  const handleRoutineSubmit = async (event, exerciseId) => {
-    await handleAddExercise(event, exerciseId);
-    revalidator.revalidate();
-  };
-
-  const handleFilterChange = (filterType, value) => {
-    setPendingFilters(prev => ({
-      ...prev,
-      [filterType]: value
-    }));
-  };
-
-  const handleApplyFilters = () => {
-    setActiveFilters(pendingFilters);
-    setCurrentPage(1); // Reset to first page when new filters are applied
-  };
-
-  const handleResetFilters = () => {
-    const emptyFilters = {
-      level: '',
-      category: '',
-      equipment: '',
-      primary_muscles: ''
-    };
-    setActiveFilters(emptyFilters);
-    setPendingFilters(emptyFilters);
-    setCurrentPage(1);
-  };
-
   const hasFilterChanges = useMemo(() => {
     return Object.keys(activeFilters).some(
       key => activeFilters[key] !== pendingFilters[key]
@@ -116,14 +75,58 @@ export function ExercisesIndex() {
       );
     });
   }, [activeFilters, exercises]);
-
-  const totalItems = filteredExercises.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
+  
   const currentExercises = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     return filteredExercises.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [filteredExercises, currentPage]);
+
+  const { formData, handleAddExercise, handleFieldChange } = useRoutineForm();
+
+  if (!Array.isArray(exercises)) {
+    return <div>Loading...</div>;
+  }
+
+  const handleLearnMoreClick = (exercise) => {
+    setSelectedExercise(exercise);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedExercise('');
+  };
+
+  const handleRoutineSubmit = async (event, exerciseId) => {
+    await handleAddExercise(event, exerciseId);
+    revalidator.revalidate();
+  };
+
+  const handleFilterChange = (filterType, value) => {
+    setPendingFilters(prev => ({
+      ...prev,
+      [filterType]: value
+    }));
+  };
+
+  const handleApplyFilters = () => {
+    setActiveFilters(pendingFilters);
+    setCurrentPage(1); 
+  };
+
+  const handleResetFilters = () => {
+    const emptyFilters = {
+      level: '',
+      category: '',
+      equipment: '',
+      primary_muscles: ''
+    };
+    setActiveFilters(emptyFilters);
+    setPendingFilters(emptyFilters);
+    setCurrentPage(1);
+  };
+
+  const totalItems = filteredExercises.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
 
   const handlePageChange = (newPage) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

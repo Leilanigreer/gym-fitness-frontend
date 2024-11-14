@@ -33,7 +33,15 @@ const router = createBrowserRouter([
       {
         path: "/Exercises",
         element: <ExercisesIndex />,
-        loader: () => apiClient.get("/exercises.json").then((response) => response.data),
+        loader: async () => {
+          try {
+            const response = await apiClient.get("/exercises.json");
+            return response.data;
+          } catch (error) {
+            console.error('Error loading exercises:', error);
+            return [];
+          }
+        },
       },
       {
         path: "/signup",
