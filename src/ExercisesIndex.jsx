@@ -8,13 +8,17 @@ import { useState, useMemo } from "react";
 
 export function ExercisesIndex() {
   const [selectedExercise, setSelectedExercise] = useState('');
+  const revalidator = useRevalidator();
+  const exercises = useLoaderData();
+  const ITEMS_PER_PAGE = 20;
+
   const [activeFilters, setActiveFilters] = useState({
     level: '',
     category: '',
     equipment: '',
     primary_muscles: ''
   });
-  
+
   const [pendingFilters, setPendingFilters] = useState({
   level: '',
   category: '',
@@ -23,42 +27,53 @@ export function ExercisesIndex() {
   });  
 
   const [currentPage, setCurrentPage] = useState(1);
-  const revalidator = useRevalidator();
-  const exercises = useLoaderData();
-  const ITEMS_PER_PAGE = 20;
 
+  const safeExercises = useMemo(() => {
+    return Array.isArray(exercises) ? exercises : [];
+  }, [exercises]);
+  
   const uniqueValues = useMemo(() => {
+    if (!Array.isArray(safeExercises) || safeExercises.length === 0) {
+      return {
+        level: [],
+        category: [],
+        equipment: [],
+        primary_muscles: []
+      };
+    }
+
     return {
-      level: [...new Set(exercises.map(ex => ex.level))]
+      level: [...new Set(safeExercises.map(ex => ex?.level))]
         .filter(Boolean)
         .sort()
         .map(level => ({
           value: level,
-          display: exercises.find(ex => ex.level === level).capital_level
+          display: safeExercises.find(ex => ex?.level === level)?.capital_level || level
         })),
-      category: [...new Set(exercises.map(ex => ex.category))]
+      category: [...new Set(safeExercises.map(ex => ex?.category))]
         .filter(Boolean)
         .sort()
         .map(category => ({
           value: category,
-          display: exercises.find(ex => ex.category === category).capital_category
+          display: safeExercises.find(ex => ex?.category === category)?.capital_category || category
         })),
-      equipment: [...new Set(exercises.map(ex => ex.equipment))]
+      equipment: [...new Set(safeExercises.map(ex => ex?.equipment))]
         .filter(Boolean)
         .sort()
         .map(equipment => ({
           value: equipment,
-          display: exercises.find(ex => ex.equipment === equipment).capital_equipment
+          display: safeExercises.find(ex => ex?.equipment === equipment)?.capital_equipment || equipment
         })),
-      primary_muscles: [...new Set(exercises.map(ex => ex.primary_muscles[0]))]
+      primary_muscles: [...new Set(safeExercises.map(ex => ex?.primary_muscles?.[0]))]
         .filter(Boolean)
         .sort()
         .map(primary_muscles => ({
           value: primary_muscles,
-          display: exercises.find(ex => ex.primary_muscles[0] === primary_muscles).capital_primary_muscles
+          display: safeExercises.find(ex => ex?.primary_muscles?.[0] === primary_muscles)?.capital_primary_muscles || primary_muscles
         }))
     };
-  }, [exercises]);
+  }, [safeExercises]);
+
   const hasFilterChanges = useMemo(() => {
     return Object.keys(activeFilters).some(
       key => activeFilters[key] !== pendingFilters[key]
@@ -66,7 +81,7 @@ export function ExercisesIndex() {
   }, [activeFilters, pendingFilters]);
 
   const filteredExercises = useMemo(() => {
-    return exercises.filter(exercise => {
+    return safeExercises.filter(exercise => {
       return (
         (activeFilters.level === '' || exercise.level === activeFilters.level) &&
         (activeFilters.category === '' || exercise.category === activeFilters.category) &&
@@ -74,7 +89,7 @@ export function ExercisesIndex() {
         (activeFilters.primary_muscles === '' || exercise.primary_muscles[0] === activeFilters.primary_muscles)
       );
     });
-  }, [activeFilters, exercises]);
+  }, [activeFilters, safeExercises]);
   
   const currentExercises = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -84,7 +99,13 @@ export function ExercisesIndex() {
   const { formData, handleAddExercise, handleFieldChange } = useRoutineForm();
 
   if (!Array.isArray(exercises)) {
-    return <div>Loading...</div>;
+    return (
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
   }
 
   const handleLearnMoreClick = (exercise) => {

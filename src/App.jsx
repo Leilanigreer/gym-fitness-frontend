@@ -36,6 +36,11 @@ const router = createBrowserRouter([
         loader: async () => {
           try {
             const response = await apiClient.get("/exercises.json");
+            // Add defensive check
+            if (!response?.data || !Array.isArray(response.data)) {
+              console.error('Invalid response data format:', response);
+              return [];
+            }
             return response.data;
           } catch (error) {
             console.error('Error loading exercises:', error);
