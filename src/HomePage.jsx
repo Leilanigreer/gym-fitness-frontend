@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import apiClient from './config/axios';
 import { Link } from 'react-router-dom';
 import { isAuthenticated } from './utils/auth';
+import logo from 'src/assets/Bigger_Get_in_Shape.png';
+
 
 const HomePage = () => {
   const [currentUser, setCurrentUser] = useState({});
@@ -32,7 +34,7 @@ const HomePage = () => {
         <div className="col-lg-8 col-md-10 col-sm-12">
           <div className="text-center py-5">
             <img
-              src="src/assets/Bigger_Get_in_Shape.png"
+              src={logo}
               className="img-fluid mb-4 shadow rounded"
               alt="Get in Shape Logo"
               style={{ maxWidth: '400px' }}

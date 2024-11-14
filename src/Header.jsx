@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { LogoutLink } from "./LogoutLink";
 import { isAuthenticated } from "./utils/auth";
+import logo from 'src/assets/Bigger_Get_in_Shape.png';
 
 
 export function Header() {
@@ -51,7 +52,7 @@ export function Header() {
             to="/"
           >
             <img 
-              src="src/assets/Bigger_Get_in_Shape.png" 
+              src={logo} 
               alt="Logo" 
               width="50" 
               height="50" 

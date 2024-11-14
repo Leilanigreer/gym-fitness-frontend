@@ -1,4 +1,6 @@
 
+import logo from 'src/assets/Bigger_Get_in_Shape.png';
+
 export function Footer() {
   return (
     <footer className="navbar fixed-bottom" style={{ backgroundColor: '#2D0A31' }}>
@@ -12,7 +14,7 @@ export function Footer() {
           <div className="col-auto">
             <div className="d-flex align-items-center gap-2">
               <img 
-                src="src/assets/Bigger_Get_in_Shape.png" 
+                src={logo} 
                 alt="GIS Logo" 
                 className="rounded"
                 style={{ width: '20px', height: '20px' }} 
