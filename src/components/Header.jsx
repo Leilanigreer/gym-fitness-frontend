@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { LogoutLink } from "./LogoutLink";
-import { isAuthenticated } from "./utils/auth";
-import logo from 'src/assets/Bigger_Get_in_Shape.png';
+import { LogoutLink } from "../LogoutLink";
+import { isAuthenticated } from "../utils/auth";
+import logo from '../assets/Bigger_Get_in_Shape.png';
 
 
 export function Header() {

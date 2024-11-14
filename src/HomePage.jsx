@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import apiClient from './config/axios';
 import { Link } from 'react-router-dom';
 import { isAuthenticated } from './utils/auth';
-import logo from 'src/assets/Bigger_Get_in_Shape.png';
+import logo from './assets/Bigger_Get_in_Shape.png';
 
 
 const HomePage = () => {

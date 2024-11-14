@@ -1,5 +1,5 @@
 
-import logo from 'src/assets/Bigger_Get_in_Shape.png';
+import logo from '../assets/Bigger_Get_in_Shape.png';
 
 export function Footer() {
   return (
