@@ -8,6 +8,8 @@ const baseURL = isDevelopment
   ? 'http://localhost:3000'
   : import.meta.env.VITE_API_URL;
 
+console.log('Current baseURL:', baseURL); // Add this line to debug
+
 // Create axios instance with default config
 const apiClient = axios.create({
   baseURL,
