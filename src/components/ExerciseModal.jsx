@@ -2,6 +2,14 @@
 const ExerciseModal = ({ selectedExercise, onClose }) => {
   if (!selectedExercise) return null;
 
+  const formatSecondaryMuscles = (muscles) => {
+    if (!muscles || muscles.length === 0) return null;
+    
+    return muscles
+      .map(muscle => muscle.charAt(0).toUpperCase() + muscle.slice(1))
+      .join(', ');
+  }; 
+
   return (
     <div 
       className="modal fade" 
@@ -71,6 +79,14 @@ const ExerciseModal = ({ selectedExercise, onClose }) => {
                       <span>{selectedExercise.capital_primary_muscles}</span>
                     </div>
                   </div>
+                  {selectedExercise.secondary_muscles && selectedExercise.secondary_muscles.length > 0 && (
+                    <div className="col-12">
+                      <div className="detail-item">
+                        <span className="text-muted">Secondary Muscles: </span>
+                        <span>{formatSecondaryMuscles(selectedExercise.secondary_muscles)}</span>
+                      </div>
+                    </div>
+                  )}
                   {selectedExercise.mechanic && (
                     <div className="col-12">
                       <div className="detail-item">

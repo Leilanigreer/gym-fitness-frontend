@@ -3,15 +3,25 @@ import { useState } from 'react';
 import { useLoaderData, useRevalidator } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import { WorkoutLogForm } from './components/WorkoutLogForm';
+import ExerciseModal from './components/ExerciseModal';
 
 export function WorkoutLog() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedExercise, setSelectedExercise] =useState("")
   
   const { dates = [] } = useLoaderData();
-  console.log(dates);
 
   const revalidator = useRevalidator();
+
+  const handleLearnMoreClick = (exercise) => {
+    console.log(exercise);
+    setSelectedExercise(exercise);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedExercise('');
+  };
 
   const handleLogUpdate = () => {
     revalidator.revalidate();
@@ -32,6 +42,7 @@ export function WorkoutLog() {
   const selectedDateData = dates.find(dateData => 
     dateData.date === formatDateForComparison(selectedDate)
   );
+  console.log(selectedDateData);
 
   const getNoRoutinesMessage = () => {
     const today = new Date();
@@ -40,7 +51,7 @@ export function WorkoutLog() {
     
     // If date is in the future
     if (selectedDate > today) {
-      return "No routines scheduled for this day.";
+      return "You can't log workouts for a day in the future.";
     }
     // If date is more than a month old and no data
     else if (selectedDate < oneMonthAgo && !selectedDateData) {
@@ -140,6 +151,14 @@ export function WorkoutLog() {
         <div key={routine.id} className="card mb-3">
           <div className="card-body">
             <h5 className="card-title">{routine.exercise_name}</h5>
+            <button 
+              className="btn btn-primary btn-sm px-3 py-1"
+              onClick={() => handleLearnMoreClick(routine.exercise)}
+              data-bs-toggle="modal"
+              data-bs-target="#exerciseModal"
+            >
+              Learn More
+            </button>
             <WorkoutLogForm 
               routine={routine} 
               selectedDate={selectedDate}
@@ -152,6 +171,10 @@ export function WorkoutLog() {
           {getNoRoutinesMessage()}
         </div>
       )}
+        <ExerciseModal 
+        selectedExercise={selectedExercise} 
+        onClose={handleCloseModal} 
+      />
     </div>
   );
 }
