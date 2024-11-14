@@ -1,5 +1,4 @@
 // src/config/axios.js
-// src/config/axios.js
 import axios from 'axios';
 
 const isDevelopment = import.meta.env.MODE === 'development';
@@ -7,7 +6,7 @@ const isDevelopment = import.meta.env.MODE === 'development';
 // Base URL configuration
 const baseURL = isDevelopment 
   ? 'http://localhost:3000'
-  : import.meta.env.VITE_API_URL || 'https://gym-fitness-frontend-production.up.railway.app';
+  : import.meta.env.VITE_API_URL;
 
 // Create axios instance with default config
 const apiClient = axios.create({
