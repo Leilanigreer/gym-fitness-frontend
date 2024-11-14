@@ -7,7 +7,7 @@ const isDevelopment = import.meta.env.MODE === 'development';
 // Base URL configuration
 const baseURL = isDevelopment 
   ? 'http://localhost:3000'
-  : import.meta.env.VITE_API_URL || 'https://your-railway-app-url.railway.app';
+  : import.meta.env.VITE_API_URL || 'https://gym-fitness-frontend-production.up.railway.app';
 
 // Create axios instance with default config
 const apiClient = axios.create({
