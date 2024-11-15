@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RoutineForm } from '../components/RoutineForm';
 import { getImageUrl } from '../utils/imageUtils';
@@ -13,11 +13,6 @@ const ExerciseCard = ({
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [failedImages, setFailedImages] = useState(new Set());
-
-  useEffect(() => {
-    console.log('Exercise images:', exercise.images);
-    console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
-  }, [exercise]);
 
   const handleImageError = (imageUrl, error) => {
     console.error('Image load failed:', imageUrl, error);

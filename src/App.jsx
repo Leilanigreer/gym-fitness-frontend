@@ -7,7 +7,6 @@ import { LoginPage } from "./LoginPage";
 import { SignupPage } from "./SignupPage";
 import  RoutinesIndex  from "./RoutinesIndex";
 import  HomePage from "./HomePage";
-// import { WorkoutLogNew } from "./WorkoutLogNew";
 import { WorkoutLog } from "./WorkoutLog";
 
 const router = createBrowserRouter([
@@ -36,7 +35,6 @@ const router = createBrowserRouter([
         loader: async () => {
           try {
             const response = await apiClient.get("/exercises.json");
-            // Add defensive check
             if (!response?.data || !Array.isArray(response.data)) {
               console.error('Invalid response data format:', response);
               return [];
@@ -66,22 +64,6 @@ const router = createBrowserRouter([
         element: <WorkoutLog />,
         loader: () => apiClient.get("/workout_logs.json").then((response) => response.data),
       },
-      // {
-      //   path: "/workout_log",
-      //   element: <WorkoutLogNew />,
-      //   loader: async () => {
-      //     // Load both routines and workout logs
-      //     const [routinesResponse, logsResponse] = await Promise.all([
-      //       apiClient.get("/routines.json"),
-      //       apiClient.get("/workout_logs.json")
-      //     ]);
-          
-      //     return {
-      //       routines: routinesResponse.data,
-      //       logs: logsResponse.data
-      //     };
-      //   }
-      // },
     ],
   },
 ]);

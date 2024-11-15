@@ -9,7 +9,6 @@ export const DAYS_OF_WEEK = {
   SATURDAY: 'Saturday'
 };
 
-// Array version if you need to map/iterate
 export const DAYS_ARRAY = [
   'Sunday',
   'Monday',
@@ -20,7 +19,6 @@ export const DAYS_ARRAY = [
   'Saturday'
 ];
 
-// Short versions if needed
 export const SHORT_DAYS = {
   SUNDAY: 'Sun',
   MONDAY: 'Mon',
@@ -50,9 +48,4 @@ export const getShortDay = (day) => {
 export const getNextDay = (currentDay) => {
   const currentIndex = DAYS_ARRAY.indexOf(currentDay);
   return DAYS_ARRAY[(currentIndex + 1) % 7];
-};
-
-export const getTodaysWorkouts = (routines) => {
-  const today = getCurrentDay();
-  return routines.filter(routine => routine.day === today);
 };

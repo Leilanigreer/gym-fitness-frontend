@@ -3,14 +3,10 @@ import axios from 'axios';
 
 const isDevelopment = import.meta.env.MODE === 'development';
 
-// Base URL configuration
 const baseURL = isDevelopment 
   ? 'http://localhost:3000'
   : import.meta.env.VITE_API_URL;
 
-console.log('Current baseURL:', baseURL); // Add this line to debug
-
-// Create axios instance with default config
 const apiClient = axios.create({
   baseURL,
   headers: {
@@ -19,16 +15,3 @@ const apiClient = axios.create({
 });
 
 export default apiClient;
-
-// Usage example:
-// import apiClient from '../config/axios';
-// 
-// const createWorkoutLog = async (params) => {
-//   try {
-//     const response = await apiClient.post('/workout_logs', params);
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error creating workout log:', error);
-//     throw error;
-//   }
-// };

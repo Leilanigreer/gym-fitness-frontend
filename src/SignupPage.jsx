@@ -1,8 +1,10 @@
 import apiClient from "./config/axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function SignupPage() {
   const [errors, setErrors] = useState([]);
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -10,13 +12,11 @@ export function SignupPage() {
     const params = new FormData(event.target);
     apiClient
       .post("/users.json", params)
-      .then((response) => {
-        console.log(response.data);
+      .then(() => {
         event.target.reset();
-        window.location.href = "/"; // Change this to hide a modal, redirect to a specific page, etc.
+        navigate("/login")
       })
       .catch((error) => {
-        console.log(error.response.data.errors);
         setErrors(error.response.data.errors);
       });
   };

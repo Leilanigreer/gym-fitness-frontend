@@ -22,7 +22,6 @@ export function useRoutineForm() {
     try {
       await apiClient.post("/routines.json", params);
       
-      // Clear form data for this exercise
       setFormData(prev => ({
         reps: { ...prev.reps, [exerciseId]: "" },
         day: { ...prev.day, [exerciseId]: "" },
@@ -57,7 +56,6 @@ export function useRoutineForm() {
         sets: { ...prev.sets, [routineId]: "" },
       }));
 
-      // Call success callback if provided
       if (onSuccess) {
         onSuccess();
       }

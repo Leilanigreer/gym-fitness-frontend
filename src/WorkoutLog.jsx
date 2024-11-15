@@ -15,7 +15,6 @@ export function WorkoutLog() {
   const revalidator = useRevalidator();
 
   const handleLearnMoreClick = (exercise) => {
-    console.log(exercise);
     setSelectedExercise(exercise);
   };
 
@@ -38,26 +37,21 @@ export function WorkoutLog() {
       String(d.getDate()).padStart(2, '0')}`;
   };
 
-  // Find routines for selected date
   const selectedDateData = dates.find(dateData => 
     dateData.date === formatDateForComparison(selectedDate)
   );
-  console.log(selectedDateData);
 
   const getNoRoutinesMessage = () => {
     const today = new Date();
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(today.getMonth() - 1);
     
-    // If date is in the future
     if (selectedDate > today) {
       return "You can't log workouts for a day in the future.";
     }
-    // If date is more than a month old and no data
     else if (selectedDate < oneMonthAgo && !selectedDateData) {
       return "No workouts were logged for this day.";
     }
-    // Default message for recent dates without data
     return "No routines scheduled for this day.";
   };
 
@@ -82,7 +76,6 @@ export function WorkoutLog() {
     setShowCalendar(false);
   };
 
-  // Error state display if no data
   if (!Array.isArray(dates)) {
     return (
       <div className="alert alert-danger">

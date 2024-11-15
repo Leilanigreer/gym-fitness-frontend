@@ -24,6 +24,7 @@ export function WorkoutLogForm({ routine, selectedDate, onSuccess }) {
         <label className="form-label">Sets Completed</label>
         <input
           type="number"
+          min="0"
           name="actual_sets"
           className="form-control"
           value={formData.actual_sets}
@@ -35,6 +36,7 @@ export function WorkoutLogForm({ routine, selectedDate, onSuccess }) {
         <label className="form-label">Reps per Set</label>
         <input
           type="number"
+          min="0"
           name="actual_reps"
           className="form-control"
           value={formData.actual_reps}

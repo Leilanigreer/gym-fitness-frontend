@@ -15,7 +15,6 @@ const HomePage = () => {
     const getUserData = () => {
       apiClient.get("/users/current.json")
         .then(response => {
-          console.log(response.data);
           setCurrentUser(response.data);
         })
         .catch(error => {

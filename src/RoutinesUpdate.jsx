@@ -40,6 +40,7 @@ export function RoutineUpdate({ routine, onSubmit, onFieldChange, onClose }) {
           <input
             id="reps"
             type="number"
+            min="0"
             value={routine.reps || ""}
             onChange={(e) => handleChange("reps", e.target.value)}
             name="reps"
@@ -52,6 +53,7 @@ export function RoutineUpdate({ routine, onSubmit, onFieldChange, onClose }) {
           <input
             id="sets"
             type="number"
+            min="0"
             value={routine.sets || ""}
             onChange={(e) => handleChange("sets", e.target.value)}
             name="sets"

@@ -33,6 +33,7 @@ export function RoutineForm({ onSubmit, exerciseId, formData = {}, onFieldChange
         <input
           id={`reps-${exerciseId}`}
           type="number"
+          min="0"
           value={reps[exerciseId] || ""}
           onChange={(e) => handleChange("reps", e.target.value)}
           className="form-control mb-2"
@@ -43,6 +44,7 @@ export function RoutineForm({ onSubmit, exerciseId, formData = {}, onFieldChange
         <input
           id={`sets-${exerciseId}`}
           type="number"
+          min="0"
           value={sets[exerciseId] || ""}
           onChange={(e) => handleChange("sets", e.target.value)}
           className="form-control mb-2"
