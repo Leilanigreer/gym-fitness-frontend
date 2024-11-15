@@ -159,3 +159,12 @@ $custom-colors: (
     color: #28a745;
   }
 }
+
+.action-btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}

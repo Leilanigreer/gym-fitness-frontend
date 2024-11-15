@@ -67,7 +67,7 @@ const HomePage = () => {
                       to="/routines"
                       className={secondaryButtonClass}
                     >
-                      All Routines
+                      My Routines
                     </Link>
                     <Link 
                       to="/workout_log"
@@ -94,7 +94,7 @@ const HomePage = () => {
                       to="/signup"
                       className={secondaryButtonClass}
                     >
-                      Sign Up
+                      Signup
                     </Link>
                   </div>
                 )}

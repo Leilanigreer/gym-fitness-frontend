@@ -144,7 +144,7 @@ const ExerciseCard = ({
             ) : (
               <div className="alert alert-info p-2 mb-0 flex-grow-1" role="alert">
                 <Link to="/login" className="alert-link">Log in</Link> or{" "}
-                <Link to="/signup" className="alert-link">sign up</Link>{" "}
+                <Link to="/signup" className="alert-link">Signup</Link>{" "}
                 to add this exercise!
               </div>
             )}

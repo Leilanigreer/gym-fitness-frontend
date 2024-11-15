@@ -38,7 +38,7 @@ export function Header() {
           className="nav-link px-3 mx-1" 
           to="/workout_log"
         >
-          Todays Routines
+          Today&apos;s Routines
         </Link>
       </li>
     </>

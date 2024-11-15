@@ -6,7 +6,7 @@ import { RoutineUpdate } from "./RoutinesUpdate";
 
 const RoutinesIndex = () => {
   const routines = useLoaderData();
-  const [selectedDay, setSelectedDay] = useState("All Routines");
+  const [selectedDay, setSelectedDay] = useState("My Routines");
   const [selectedRoutine, setSelectedRoutine] = useState(null);
   const { formData, handleFieldChange, handleUpdateRoutine, initializeFormData } = useRoutineForm();
 
@@ -90,9 +90,9 @@ const RoutinesIndex = () => {
           <li>
             <button
               className="dropdown-item"
-              onClick={() => handleDayChange("All Routines")}
+              onClick={() => handleDayChange("My Routines")}
             >
-              All Routines
+              My Routines
             </button>
           </li>
           {DAYS_ARRAY.map((day) => (
@@ -109,7 +109,7 @@ const RoutinesIndex = () => {
       </div>
 
       {/* Content Area */}
-      {selectedDay === "All Routines" ? (
+      {selectedDay === "My Routines" ? (
         <div className="accordion" id="routinesAccordion">
           {DAYS_ARRAY.map((day, index) => (
             routinesByDay[day].length > 0 && (
