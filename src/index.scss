@@ -1,3 +1,5 @@
+// src/index.scss
+
 // Custom Bootstrap variables
 $primary: #5D3E8D; // A nice purple for primary actions
 $success: #7E5BB7; // A lighter purple for secondary actions
@@ -32,6 +34,77 @@ $custom-colors: (
   }
 }
 
+// Header specific styles
+.navbar {
+  background-color: #2D0A31 !important;
+
+  .header-btn {
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+    padding: 0.375rem 1rem;
+
+    &.btn-signup {
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      color: white !important;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: white;
+        transform: translateY(-1px);
+      }
+    }
+
+    &.btn-login {
+      background-color: white;
+      color: #2D0A31 !important;
+      border: 1px solid white;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.9);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    &.btn-logout {
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      color: white !important;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: white;
+      }
+    }
+  }
+
+  // Style for nav links
+  .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+
+    &:hover {
+      color: white !important;
+
+      &::after {
+        width: 100%;
+      }
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: white;
+      transition: width 0.2s ease-in-out;
+    }
+  }
+}
+
 // Card and element transitions
 .hover-shadow-md {
   transition: box-shadow 0.3s ease-in-out;
@@ -49,4 +122,40 @@ $custom-colors: (
 
 .transition {
   transition: all 0.3s ease-in-out;
+}
+
+// Form styles
+.form-control {
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease-in-out;
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 0.25rem rgba($primary, 0.25);
+  }
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+// Card styles
+.card {
+  background-color: #fff;
+}
+
+// Alert styles
+.alert {
+  border: none;
+
+  &.alert-danger {
+    background-color: #fff2f2;
+    color: #dc3545;
+  }
+
+  &.alert-success {
+    background-color: #f0fff4;
+    color: #28a745;
+  }
 }

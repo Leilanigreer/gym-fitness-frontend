@@ -8,24 +8,26 @@ export function Header() {
   let authenticationLinks;
   let routineLinks;
 
+// Change this part in your Header component
   if (!isAuthenticated()) {
     authenticationLinks = (
       <li className="nav-item d-flex">
-        <Link className="nav-link btn btn-outline-light mx-1 px-3" to="/Signup">Signup</Link>
-        <Link className="nav-link btn btn-light mx-1 px-3" to="/Login">Login</Link>
+        <Link className="nav-link header-btn btn-signup mx-1 px-3" to="/Signup">Signup</Link>
+        <Link className="nav-link header-btn btn-login mx-1 px-3" to="/Login">Login</Link>
       </li>
     );
   } else {
     authenticationLinks = (
       <li className="nav-item">
-        <LogoutLink className="nav-link btn btn-outline-light px-3" />
+        <LogoutLink className="nav-link header-btn btn-logout px-3" />
       </li>
     );
+
     routineLinks = (
       <>
         <li className="nav-item">
         <Link 
-          className="nav-link text-white hover:text-opacity-75 px-3 mx-1" 
+          className="nav-link px-3 mx-1" 
           to="/routines"
         >
           My Routines
@@ -33,7 +35,7 @@ export function Header() {
         </li>
         <li className="nav-item">
         <Link 
-          className="nav-link text-white hover:text-opacity-75 px-3 mx-1" 
+          className="nav-link px-3 mx-1" 
           to="/workout_log"
         >
           Todays Routines
@@ -77,7 +79,7 @@ export function Header() {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <Link 
-                  className="nav-link text-white hover:text-opacity-75 px-3 mx-1" 
+                  className="nav-link px-3 mx-1" 
                   aria-current="page" 
                   to="/"
                 >
@@ -86,7 +88,7 @@ export function Header() {
               </li>
               <li className="nav-item">
                 <Link 
-                  className="nav-link text-white hover:text-opacity-75 px-3 mx-1" 
+                  className="nav-link px-3 mx-1" 
                   to="/Exercises"
                 >
                   Exercises
