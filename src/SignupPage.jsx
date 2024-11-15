@@ -14,7 +14,9 @@ export function SignupPage() {
       .post("/users.json", params)
       .then(() => {
         event.target.reset();
-        navigate("/login")
+        navigate("/login", {
+          state: {message: "Signup successful! Login to start your workout journey."}
+        });
       })
       .catch((error) => {
         setErrors(error.response.data.errors);

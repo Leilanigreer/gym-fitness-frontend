@@ -1,5 +1,6 @@
 import apiClient from "./config/axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const jwt = localStorage.getItem("jwt");
 if (jwt) {
@@ -8,6 +9,18 @@ if (jwt) {
 
 export function LoginPage() {
   const [errors, setErrors] = useState([]);
+  const location = useLocation ();
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if(location.state?.message) {
+      setMessage(location.state.message);
+      const timer = setTimeout(()=> {
+        setMessage("");
+      }, 10000)
+      return () => clearTimeout(timer)
+    }
+  }, [location]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -29,6 +42,9 @@ export function LoginPage() {
 
   return (
     <div id="login">
+      {message && (
+        <div className="alert alert-success" role="alert" >{message}</div>
+      )}
       <h1>Login</h1>
       <ul>
         {errors.map((error) => (
