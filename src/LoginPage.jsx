@@ -25,9 +25,11 @@ export function LoginPage() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors([]);
-    const params = new FormData(event.target);
+    const formData = new FormData(event.target);
+    formData.set('email', formData.get('email').toLowerCase());
+    
     apiClient
-      .post("/sessions.json", params)
+      .post("/sessions.json", formData)
       .then((response) => {
         apiClient.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
         localStorage.setItem("jwt", response.data.jwt);
@@ -35,31 +37,59 @@ export function LoginPage() {
         window.location.href = "/";
       })
       .catch((error) => {
-        console.log(error.response);
-        setErrors(["Invalid email or password"]);
+        setErrors(error.response.data.errors);
       });
   };
 
   return (
-    <div id="login">
-      {message && (
-        <div className="alert alert-success" role="alert" >{message}</div>
-      )}
-      <h1>Login</h1>
-      <ul>
-        {errors.map((error) => (
-          <li key={error}>{error}</li>
-        ))}
-      </ul>
-      <form onSubmit={handleSubmit}>
-        <div>
-          Email: <input name="email" type="email" />
+    <div className="container-fluid bg-light min-vh-100 py-5">
+      <div className="row justify-content-center">
+        <div className="col-12 col-md-8 col-lg-6">
+          <div className="card border-0 shadow hover-shadow-md transition rounded-4">
+            <div className="card-body p-4 p-md-5">
+              {message && (
+                <div className="alert alert-success" role="alert" >{message}</div>
+              )}
+              <h1 className="display-6 mb-4 text-center">Login</h1>
+              
+              {errors.length > 0 && (
+                <div className="alert alert-danger mb-4">
+                  <ul>
+                    {errors.map((error) => (
+                      <li key={error}>{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label htmlFor="email" className="form-label">Email</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    className="form-control form-control-lg"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="password" className="form-label">Password</label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    className="form-control form-control-lg"
+                    required
+                  />
+                </div>
+              
+                <button type="submit" className="btn btn-primary w-100 py-3 transition">Login</button>
+              </form>
+            </div>
+          </div>
         </div>
-        <div>
-          Password: <input name="password" type="password" />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+      </div>
     </div>
   );
 }
