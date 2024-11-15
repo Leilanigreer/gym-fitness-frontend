@@ -25,20 +25,20 @@ export function LoginPage() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrors([]);
-    const formData = new FormData(event.target);
-    formData.set('email', formData.get('email').toLowerCase());
+    
+    const formData = {
+      email: event.target.email.value.toLowerCase(),
+      password: event.target.password.value
+    };
     
     apiClient
       .post("/sessions.json", formData)
       .then((response) => {
-        apiClient.defaults.headers.common["Authorization"] = "Bearer " + response.data.jwt;
         localStorage.setItem("jwt", response.data.jwt);
-        event.target.reset();
+        apiClient.defaults.headers.common["Authorization"] = `Bearer ${response.data.jwt}`;
         window.location.href = "/";
       })
-      .catch((error) => {
-        setErrors(error.response.data.errors);
-      });
+      .catch((error) => setErrors(error.response?.data?.errors || ["An error occurred"]));
   };
 
   return (

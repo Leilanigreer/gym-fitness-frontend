@@ -10,7 +10,8 @@ const baseURL = isDevelopment
 const apiClient = axios.create({
   baseURL,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
   }
 });
 

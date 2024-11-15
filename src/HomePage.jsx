@@ -30,13 +30,12 @@ const HomePage = () => {
   return (
     <div className="container-fluid bg-light min-vh-100">
       <div className="row justify-content-center">
-        <div className="col-lg-8 col-md-10 col-sm-12">
+        <div className="col-11 col-sm-10 col-md-8 col-lg-7">
           <div className="text-center py-5">
             <img
               src={logo}
-              className="img-fluid mb-4 shadow rounded"
+              className="img-fluid mb-4 shadow rounded logo-img"
               alt="Get in Shape Logo"
-              style={{ maxWidth: '400px' }}
             />
             
             <div className="bg-white rounded shadow p-5 mb-4">

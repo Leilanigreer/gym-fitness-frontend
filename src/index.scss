@@ -168,3 +168,41 @@ $custom-colors: (
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 }
+
+.logo-img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  object-fit: contain;
+
+  @media (min-width: 768px) {
+    min-width: 350px;
+  }
+
+  @media (max-width: 767px) {
+    width: 80%;
+    min-width: 280px;
+  }
+
+  @media (max-width: 575px) {
+    width: 70%;
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 767px) {
+  .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .bg-white.rounded.shadow {
+    padding: 2rem !important;
+  }
+}
+
+.gap-3 {
+  @media (max-width: 575px) {
+    gap: 1rem !important;
+  }
+}
